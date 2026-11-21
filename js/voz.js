@@ -14,6 +14,7 @@ let estaFalando = false;
 let idItemFalando = null;
 let ouvintesEstado = [];
 let sintetizador = typeof window !== 'undefined' ? window.speechSynthesis : null;
+let observadoresVozesConfigurados = false;
 
 /**
  * Registra um ouvinte para alterações no estado de fala (início, fim, erro)
@@ -51,58 +52,73 @@ function notificarEstado(texto = '') {
  * @returns {Promise<Array<SpeechSynthesisVoice>>}
  */
 export function carregarVozes() {
-  return new Promise((resolve) => {
-    if (!sintetizador) {
-      resolve([]);
-      return;
-    }
+  if (!sintetizador) return Promise.resolve([]);
+  configurarObservadoresVozes();
 
+  if (atualizarListaVozes()) return Promise.resolve(vozesDisponiveis);
+
+  return new Promise(resolve => {
     let resolvida = false;
-    const concluir = (vozes) => {
+    const concluir = () => {
       if (resolvida) return;
       resolvida = true;
-      resolve(vozes);
+      clearTimeout(timeout);
+      window.removeEventListener('ecoa-vozes-atualizadas', concluir);
+      resolve(vozesDisponiveis);
     };
+    const timeout = setTimeout(() => {
+      atualizarListaVozes();
+      concluir();
+    }, 1000);
 
-    function atualizarLista() {
-      const todasVozes = sintetizador.getVoices() || [];
-      if (todasVozes.length === 0) return false;
+    window.addEventListener('ecoa-vozes-atualizadas', concluir);
+  });
+}
 
-      // Prioriza pt-BR e depois as demais variantes do português
-      vozesDisponiveis = todasVozes.slice().sort((a, b) => {
-        const idiomaA = (a.lang || '').toLowerCase();
-        const idiomaB = (b.lang || '').toLowerCase();
-        const aBr = idiomaA === 'pt-br' || idiomaA.startsWith('pt_br');
-        const bBr = idiomaB === 'pt-br' || idiomaB.startsWith('pt_br');
-        if (aBr !== bBr) return aBr ? -1 : 1;
+function atualizarListaVozes() {
+  if (!sintetizador) return false;
 
-        const aPt = idiomaA.startsWith('pt');
-        const bPt = idiomaB.startsWith('pt');
-        if (aPt !== bPt) return aPt ? -1 : 1;
+  let todasVozes;
+  try {
+    todasVozes = sintetizador.getVoices() || [];
+  } catch (erro) {
+    console.warn(`[${APP_NAME}] Não foi possível consultar as vozes do aparelho:`, erro);
+    return false;
+  }
+  if (todasVozes.length === 0) return false;
 
-        return (a.name || '').localeCompare(b.name || '');
-      });
+  vozesDisponiveis = todasVozes.slice().sort((a, b) => {
+    const idiomaA = (a.lang || '').toLowerCase();
+    const idiomaB = (b.lang || '').toLowerCase();
+    const aBr = idiomaA === 'pt-br' || idiomaA.startsWith('pt_br');
+    const bBr = idiomaB === 'pt-br' || idiomaB.startsWith('pt_br');
+    if (aBr !== bBr) return aBr ? -1 : 1;
 
-      definirVozPadrao();
-      concluir(vozesDisponiveis);
-      window.dispatchEvent(new CustomEvent('ecoa-vozes-atualizadas'));
-      return true;
-    }
+    const aPt = idiomaA.startsWith('pt');
+    const bPt = idiomaB.startsWith('pt');
+    if (aPt !== bPt) return aPt ? -1 : 1;
 
-    // Mantém a lista sincronizada quando o sistema instala ou disponibiliza vozes.
-    sintetizador.onvoiceschanged = atualizarLista;
+    return (a.name || '').localeCompare(b.name || '');
+  });
 
-    // Se as vozes já estiverem disponíveis imediatamente
-    const iniciais = sintetizador.getVoices();
-    if (iniciais && iniciais.length > 0) {
-      atualizarLista();
-    } else {
-      // Carregamento assíncrono padrão da Web Speech API
-      // Evita deixar a tela presa em "Carregando" se o sistema não informar vozes
-      setTimeout(() => {
-        if (!atualizarLista()) concluir([]);
-      }, 1000);
-    }
+  definirVozPadrao();
+  window.dispatchEvent(new CustomEvent('ecoa-vozes-atualizadas'));
+  return true;
+}
+
+function configurarObservadoresVozes() {
+  if (observadoresVozesConfigurados || !sintetizador) return;
+  observadoresVozesConfigurados = true;
+
+  if (typeof sintetizador.addEventListener === 'function') {
+    sintetizador.addEventListener('voiceschanged', atualizarListaVozes);
+  } else {
+    sintetizador.onvoiceschanged = atualizarListaVozes;
+  }
+
+  window.addEventListener('focus', atualizarListaVozes);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) atualizarListaVozes();
   });
 }
 
@@ -164,6 +180,10 @@ export function possuiVozPtBr() {
   });
 }
 
+export function suportaSinteseVoz() {
+  return Boolean(sintetizador && typeof SpeechSynthesisUtterance !== 'undefined');
+}
+
 /**
  * Retorna a voz atualmente ativa
  * @returns {SpeechSynthesisVoice|null}
@@ -202,10 +222,16 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
   const textoLimpo = (texto || '').trim();
   if (!textoLimpo) return false;
 
-  if (!sintetizador) {
+  if (!suportaSinteseVoz()) {
     console.warn(`[${APP_NAME}] Web Speech API não suportada neste navegador.`);
+    window.dispatchEvent(new CustomEvent('ecoa-voz-erro', {
+      detail: { error: 'speech-unavailable' }
+    }));
     return false;
   }
+
+  configurarObservadoresVozes();
+  atualizarListaVozes();
 
   // Evita cancelar o sintetizador vazio, o que pode bloquear a fala no Safari móvel.
   if (estaFalando || sintetizador.speaking || sintetizador.pending) {
@@ -213,40 +239,42 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
   }
 
   const ajustes = obterAjustes();
-  const proferimento = new SpeechSynthesisUtterance(textoLimpo);
-
-  // Configurações de fala
-  proferimento.lang = vozSelecionada?.lang || 'pt-BR';
-  if (vozSelecionada) {
-    proferimento.voice = vozSelecionada;
-  }
-  proferimento.rate = Math.max(0.5, Math.min(2.0, parseFloat(ajustes.velocidade) || 1.0));
-  proferimento.pitch = Math.max(0.5, Math.min(1.5, parseFloat(ajustes.tom) || 1.0));
-
-  // Handlers de evento
-  proferimento.onstart = () => {
-    estaFalando = true;
-    idItemFalando = id;
-    notificarEstado(textoLimpo);
-    if (typeof aoIniciar === 'function') aoIniciar();
-  };
-
-  proferimento.onend = () => {
-    estaFalando = false;
-    idItemFalando = null;
-    notificarEstado();
-    if (typeof aoTerminar === 'function') aoTerminar();
-  };
-
-  proferimento.onerror = (evento) => {
-    console.warn(`[${APP_NAME}] Erro ou cancelamento de fala:`, evento.error);
-    estaFalando = false;
-    idItemFalando = null;
-    notificarEstado();
-    if (typeof aoTerminar === 'function') aoTerminar();
-  };
-
   try {
+    const proferimento = new SpeechSynthesisUtterance(textoLimpo);
+
+    proferimento.lang = vozSelecionada?.lang || 'pt-BR';
+    if (vozSelecionada) proferimento.voice = vozSelecionada;
+    proferimento.rate = Math.max(0.5, Math.min(2.0, parseFloat(ajustes.velocidade) || 1.0));
+    proferimento.pitch = Math.max(0.5, Math.min(1.5, parseFloat(ajustes.tom) || 1.0));
+
+    proferimento.onstart = () => {
+      estaFalando = true;
+      idItemFalando = id;
+      notificarEstado(textoLimpo);
+      window.dispatchEvent(new CustomEvent('ecoa-voz-iniciada'));
+      if (typeof aoIniciar === 'function') aoIniciar();
+    };
+
+    proferimento.onend = () => {
+      estaFalando = false;
+      idItemFalando = null;
+      notificarEstado();
+      if (typeof aoTerminar === 'function') aoTerminar();
+    };
+
+    proferimento.onerror = (evento) => {
+      console.warn(`[${APP_NAME}] Erro ou cancelamento de fala:`, evento.error);
+      estaFalando = false;
+      idItemFalando = null;
+      notificarEstado();
+      if (evento.error !== 'canceled' && evento.error !== 'interrupted') {
+        window.dispatchEvent(new CustomEvent('ecoa-voz-erro', {
+          detail: { error: evento.error || 'unknown' }
+        }));
+      }
+      if (typeof aoTerminar === 'function') aoTerminar();
+    };
+
     // No iOS Safari, pode ser necessário um pequeno resume() se o sintetizador estiver pausado
     if (sintetizador.paused) {
       sintetizador.resume();
@@ -258,6 +286,9 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
     estaFalando = false;
     idItemFalando = null;
     notificarEstado();
+    window.dispatchEvent(new CustomEvent('ecoa-voz-erro', {
+      detail: { error: erro.name || 'unknown' }
+    }));
     return false;
   }
 }

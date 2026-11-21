@@ -21,6 +21,8 @@ O projeto foi criado por **Rychard Galvão** para a Universidade Federal do Mara
 
 A disponibilidade e a qualidade da síntese de voz dependem do navegador, do sistema operacional e das vozes instaladas. O mecanismo de voz pode ter requisitos próprios de conectividade e privacidade; consulte as informações da plataforma escolhida. O Ecoa não possui backend nem conta de usuário. As frases e preferências do app ficam no armazenamento local do navegador.
 
+Se o aviso de voz continuar aparecendo após baixar uma voz no iPhone, confira se ela aparece em **Ajustes → Voz** no Ecoa e toque em **Testar voz**. O iOS pode não disponibilizar ao navegador toda voz instalada no sistema. Se o Brave não listar ou não reproduzir a voz, teste a mesma página no Safari; o aviso do Ecoa mostra os erros de síntese que o navegador informar.
+
 ## Executar localmente
 
 Na pasta do projeto, execute:

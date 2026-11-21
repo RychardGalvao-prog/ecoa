@@ -26,7 +26,9 @@ import {
   checarSeEstaFalando,
   obterIdFalando,
   inscreverEstadoFala,
-  possuiVozPtBr
+  possuiVozPtBr,
+  suportaSinteseVoz,
+  testarVozAtual
 } from './voz.js';
 import { abrirModoPalco } from './palco.js';
 import { vibrarSeAtivo } from './ajustes.js';
@@ -1091,14 +1093,43 @@ function configurarRespostasRapidas() {
 function configurarAvisoVoz() {
   if (!bannerAvisoVoz) return;
 
+  const mensagem = bannerAvisoVoz.querySelector('#banner-aviso-voz-mensagem');
+  const exibirMensagem = texto => {
+    if (mensagem) mensagem.textContent = texto;
+    bannerAvisoVoz.hidden = false;
+  };
   const atualizarAviso = () => {
-    bannerAvisoVoz.hidden = possuiVozPtBr();
+    if (!suportaSinteseVoz()) {
+      exibirMensagem('Este navegador não disponibiliza síntese de voz para o Ecoa. Tente abrir o app no Safari.');
+    } else if (!possuiVozPtBr()) {
+      exibirMensagem('O navegador ainda não disponibilizou uma voz em português (pt-BR) para o Ecoa. A voz precisa aparecer também no navegador.');
+    } else {
+      bannerAvisoVoz.hidden = true;
+    }
   };
   const fecharAviso = bannerAvisoVoz.querySelector('#btn-fechar-aviso-voz');
   fecharAviso?.addEventListener('click', () => {
     bannerAvisoVoz.hidden = true;
   });
+  bannerAvisoVoz.querySelector('#btn-tentar-voz')?.addEventListener('click', () => {
+    testarVozAtual();
+  });
 
   window.addEventListener('ecoa-vozes-atualizadas', atualizarAviso);
+  window.addEventListener('ecoa-voz-iniciada', () => {
+    bannerAvisoVoz.hidden = true;
+  });
+  window.addEventListener('ecoa-voz-erro', evento => {
+    const mensagens = {
+      'speech-unavailable': 'Este navegador não disponibiliza síntese de voz para o Ecoa. Tente abrir o app no Safari.',
+      'not-allowed': 'O navegador bloqueou a fala. Toque em “Testar voz” novamente ou tente abrir o Ecoa no Safari.',
+      'voice-unavailable': 'A voz selecionada não está disponível para o navegador. Escolha outra voz em Ajustes.',
+      'language-unavailable': 'O aparelho não disponibilizou uma voz para este idioma.',
+      network: 'Não foi possível iniciar a síntese de voz. Verifique a conexão e tente novamente.',
+      'synthesis-failed': 'O navegador não conseguiu gerar a fala. Tente novamente ou abra o Ecoa no Safari.'
+    };
+    const erro = evento.detail?.error || 'unknown';
+    exibirMensagem(mensagens[erro] || `A síntese de voz falhou (${erro}). Teste novamente ou tente abrir o Ecoa no Safari.`);
+  });
   setTimeout(atualizarAviso, 1200);
 }
