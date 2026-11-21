@@ -1,0 +1,15 @@
+Pacote de logo do Ecoa (vetorizado a partir do JPG original)
+
+ecoa-simbolo.svg          símbolo colorido (fundo transparente), para fundos claros
+ecoa-simbolo-escuro.svg   símbolo em tons claros, para o tema escuro
+ecoa-simbolo-mono.svg     símbolo em uma cor só (currentColor), para o alto contraste
+ecoa-logo-horizontal.svg  símbolo + "ecoa", para o cabeçalho do app
+ecoa-logo-vertical.svg    símbolo + "ecoa", para boas-vindas e capa do relatório
+ecoa-logo-completo.svg    com o slogan "Prancha digital de comunicação com voz"
+
+icon-192.png, icon-512.png            ícones do PWA (purpose: any)
+icon-maskable-192.png, icon-maskable-512.png       ícones do PWA (purpose: maskable, com margem de segurança)
+apple-touch-icon.png                  ícone para iPhone (180x180)
+favicon.svg, favicon-32.png, favicon-48.png
+
+Cores do logo: verde escuro #15402A, verde médio #40684C, verde claro #86A28A, fundo bege #EAE4D7

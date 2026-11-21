@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#2D5A40"/>
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#D4F25A" stroke-width="24" stroke-dasharray="24 16"/>
+  <path d="M200 170 C240 130 272 130 312 170 C352 210 352 302 312 342 C272 382 240 382 200 342" fill="none" stroke="#FAF8F3" stroke-width="32" stroke-linecap="round"/>
+  <circle cx="200" cy="256" r="28" fill="#D4F25A"/>
+  <text x="256" y="440" font-family="serif" font-size="44" font-weight="bold" fill="#FAF8F3" text-anchor="middle">Ecoa</text>
+</svg>

@@ -1,0 +1,137 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - banner [ref=f1e4]:
+      - generic [ref=f1e5]:
+        - img "Ecoa" [ref=f1e6]
+        - generic [ref=f1e7]: UFMA
+        - generic "Saudação" [ref=f1e8]: Boa tarde
+      - generic [ref=f1e9]:
+        - button "Alternar modo de edição de frases" [ref=f1e10] [cursor=pointer]
+        - button "Abrir ajustes" [ref=f1e14] [cursor=pointer]
+    - main [ref=f1e18]:
+      - region "Prancha de frases" [ref=f1e19]:
+        - region "Frase de abertura" [ref=f1e20] [cursor=pointer]:
+          - generic [ref=f1e21]:
+            - generic [ref=f1e22]: Abertura
+            - button "Editar frase de abertura" [ref=f1e25]
+          - paragraph [ref=f1e29]: Olá! Eu me comunico por esta tela. Pode aguardar um instante?
+          - generic [ref=f1e30]:
+            - button "Palco" [ref=f1e31]
+            - button "Falar" [ref=f1e37]
+        - navigation "Filtrar frases por contexto" [ref=f1e42]:
+          - button "Mais usadas" [ref=f1e43] [cursor=pointer]
+          - button "Todas" [pressed] [ref=f1e47] [cursor=pointer]
+          - button "Secretaria" [ref=f1e54] [cursor=pointer]
+          - button "Biblioteca" [ref=f1e59] [cursor=pointer]
+          - button "RU" [ref=f1e64] [cursor=pointer]
+          - button "Social" [ref=f1e69] [cursor=pointer]
+          - button "Emergência" [ref=f1e74] [cursor=pointer]
+        - feed "Lista de frases" [ref=f1e83]:
+          - article [ref=f1e84] [cursor=pointer]:
+            - paragraph [ref=f1e89]: Bom dia. Preciso de uma informação.
+            - 'button "Abrir no Modo Palco: Bom dia. Preciso de uma informação." [ref=f1e91]':
+              - generic [ref=f1e97]: Palco
+          - article [ref=f1e98] [cursor=pointer]:
+            - paragraph [ref=f1e104]: Onde posso entregar este documento?
+            - 'button "Abrir no Modo Palco: Onde posso entregar este documento?" [ref=f1e106]':
+              - generic [ref=f1e112]: Palco
+          - article [ref=f1e113] [cursor=pointer]:
+            - paragraph [ref=f1e119]: Preciso de uma declaração de matrícula.
+            - 'button "Abrir no Modo Palco: Preciso de uma declaração de matrícula." [ref=f1e121]':
+              - generic [ref=f1e127]: Palco
+          - article [ref=f1e128] [cursor=pointer]:
+            - paragraph [ref=f1e133]: Pode escrever para mim, por favor?
+            - 'button "Abrir no Modo Palco: Pode escrever para mim, por favor?" [ref=f1e135]':
+              - generic [ref=f1e141]: Palco
+          - article [ref=f1e142] [cursor=pointer]:
+            - paragraph [ref=f1e148]: Qual é o prazo?
+            - 'button "Abrir no Modo Palco: Qual é o prazo?" [ref=f1e150]':
+              - generic [ref=f1e156]: Palco
+          - article [ref=f1e157] [cursor=pointer]:
+            - paragraph [ref=f1e163]: Gostaria de pegar um livro emprestado.
+            - 'button "Abrir no Modo Palco: Gostaria de pegar um livro emprestado." [ref=f1e165]':
+              - generic [ref=f1e171]: Palco
+          - article [ref=f1e172] [cursor=pointer]:
+            - paragraph [ref=f1e178]: Onde fica esta seção?
+            - 'button "Abrir no Modo Palco: Onde fica esta seção?" [ref=f1e180]':
+              - generic [ref=f1e186]: Palco
+          - article [ref=f1e187] [cursor=pointer]:
+            - paragraph [ref=f1e195]: Quero renovar o meu empréstimo.
+            - 'button "Abrir no Modo Palco: Quero renovar o meu empréstimo." [ref=f1e197]':
+              - generic [ref=f1e203]: Palco
+          - article [ref=f1e204] [cursor=pointer]:
+            - paragraph [ref=f1e210]: Preciso de ajuda para encontrar um livro.
+            - 'button "Abrir no Modo Palco: Preciso de ajuda para encontrar um livro." [ref=f1e212]':
+              - generic [ref=f1e218]: Palco
+          - article [ref=f1e219] [cursor=pointer]:
+            - paragraph [ref=f1e224]: Onde eu pago a refeição?
+            - 'button "Abrir no Modo Palco: Onde eu pago a refeição?" [ref=f1e226]':
+              - generic [ref=f1e232]: Palco
+          - article [ref=f1e233] [cursor=pointer]:
+            - paragraph [ref=f1e239]: Esta refeição tem carne?
+            - 'button "Abrir no Modo Palco: Esta refeição tem carne?" [ref=f1e241]':
+              - generic [ref=f1e247]: Palco
+          - article [ref=f1e248] [cursor=pointer]:
+            - paragraph [ref=f1e254]: Pode me ajudar a carregar a bandeja?
+            - 'button "Abrir no Modo Palco: Pode me ajudar a carregar a bandeja?" [ref=f1e256]':
+              - generic [ref=f1e262]: Palco
+          - article [ref=f1e263] [cursor=pointer]:
+            - paragraph [ref=f1e271]: Onde fica a fila preferencial?
+            - 'button "Abrir no Modo Palco: Onde fica a fila preferencial?" [ref=f1e273]':
+              - generic [ref=f1e279]: Palco
+          - article [ref=f1e280] [cursor=pointer]:
+            - paragraph [ref=f1e286]: Oi, tudo bem?
+            - 'button "Abrir no Modo Palco: Oi, tudo bem?" [ref=f1e288]':
+              - generic [ref=f1e294]: Palco
+          - article [ref=f1e295] [cursor=pointer]:
+            - paragraph [ref=f1e301]: Meu nome é ____.
+            - 'button "Abrir no Modo Palco: Meu nome é ____." [ref=f1e303]':
+              - generic [ref=f1e309]: Palco
+          - article [ref=f1e310] [cursor=pointer]:
+            - paragraph [ref=f1e316]: Pode falar mais devagar, por favor?
+            - 'button "Abrir no Modo Palco: Pode falar mais devagar, por favor?" [ref=f1e318]':
+              - generic [ref=f1e324]: Palco
+          - article [ref=f1e325] [cursor=pointer]:
+            - paragraph [ref=f1e331]: Preciso de um minuto para responder.
+            - 'button "Abrir no Modo Palco: Preciso de um minuto para responder." [ref=f1e333]':
+              - generic [ref=f1e339]: Palco
+          - article [ref=f1e340] [cursor=pointer]:
+            - paragraph [ref=f1e348]: Pode repetir, por favor?
+            - 'button "Abrir no Modo Palco: Pode repetir, por favor?" [ref=f1e350]':
+              - generic [ref=f1e356]: Palco
+          - article [ref=f1e357] [cursor=pointer]:
+            - paragraph [ref=f1e367]: Preciso de ajuda agora.
+            - 'button "Abrir no Modo Palco: Preciso de ajuda agora." [ref=f1e369]':
+              - generic [ref=f1e375]: Palco
+          - article [ref=f1e376] [cursor=pointer]:
+            - paragraph [ref=f1e381]: Chame alguém, por favor.
+            - 'button "Abrir no Modo Palco: Chame alguém, por favor." [ref=f1e383]':
+              - generic [ref=f1e389]: Palco
+          - article [ref=f1e390] [cursor=pointer]:
+            - paragraph [ref=f1e396]: Estou me sentindo mal.
+            - 'button "Abrir no Modo Palco: Estou me sentindo mal." [ref=f1e398]':
+              - generic [ref=f1e404]: Palco
+    - complementary "Respostas rápidas frequentes" [ref=f1e405]:
+      - generic [ref=f1e406]:
+        - button "Sim" [ref=f1e407] [cursor=pointer]
+        - button "Não" [ref=f1e412] [cursor=pointer]
+        - button "Obrigado(a)" [ref=f1e418] [cursor=pointer]
+        - button "Não entendi" [ref=f1e422] [cursor=pointer]
+    - navigation "Navegação do app" [ref=f1e427]:
+      - button "Frases" [ref=f1e428] [cursor=pointer]
+      - button "Digitar" [ref=f1e432] [cursor=pointer]
+      - button "Ajustes" [ref=f1e436] [cursor=pointer]
+  - dialog "O Ecoa ajuda você a se comunicar" [ref=f1e441]:
+    - generic [ref=f1e442]:
+      - button "Fechar boas-vindas" [active] [ref=f1e443] [cursor=pointer]: ×
+      - img "Ecoa" [ref=f1e444]
+      - generic [ref=f1e445]:
+        - heading "O Ecoa ajuda você a se comunicar" [level=2] [ref=f1e446]
+        - paragraph [ref=f1e447]: Use frases prontas, digite uma mensagem ou destaque o texto em tela cheia.
+      - generic [ref=f1e448]: 1 de 3
+      - generic [ref=f1e449]:
+        - button "Pular" [ref=f1e450] [cursor=pointer]
+        - button "Próximo" [ref=f1e451] [cursor=pointer]
+  - status [aria-hidden]:
+    - generic: Frase removida.
+    - button: Desfazer

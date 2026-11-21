@@ -1,0 +1,241 @@
+/**
+ * ecoa - Prancha Digital de Comunicação Alternativa e Aumentativa (CAA)
+ * Projeto Acadêmico - Universidade Federal do Maranhão (UFMA)
+ * Módulo CSS: variables.css - Tipografia local, paletas de cores WCAG e tokens de design
+ */
+
+/* 1. Declaração de Fontes Locais (Zero Dependência Externa) */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/atkinson-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/atkinson-bold.woff2') format('woff2');
+}
+
+/* 2. Variáveis Raiz e Tema Claro (Baseado nas cores oficiais do logo Ecoa) */
+:root {
+  /* Família Tipográfica Principal */
+  --fonte-principal: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fonte-display: 'Atkinson Hyperlegible', sans-serif;
+  --fonte-serifada: Georgia, 'Times New Roman', serif;
+
+  /* Paleta Tema Claro (Logo Ecoa - Verde Escuro #15402A, Médio #40684C, Claro #86A28A, Bege #EAE4D7) */
+  --cor-fundo: #EAE4D7; /* Bege oficial do logo */
+  --cor-superficie: #FAF8F3;
+  --cor-superficie-destaque: #DFD8C9;
+  --cor-texto: #15402A; /* Verde escuro do logo para títulos e destaque */
+  --cor-texto-corpo: #101310;
+  --cor-texto-secundario: #40684C;
+  --cor-borda: #40684C;
+  --cor-borda-suave: rgba(21, 64, 42, 0.1);
+
+  --cor-primaria: #15402A; /* Verde escuro do logo */
+  --cor-primaria-hover: #0E2B1C;
+  --cor-primaria-texto: #FAF8F3;
+
+  --cor-secundaria: #40684C; /* Verde médio do logo */
+  --cor-secundaria-clara: #86A28A; /* Verde claro do logo */
+  --cor-secundaria-texto: #FAF8F3;
+
+  --cor-acento-lima: #D4F25A; /* Reservado para estados de fala e foco ativo */
+  --cor-acento-lima-texto: #101310;
+
+  --cor-erro: #9E2A2B;
+  --cor-erro-fundo: #FDF0ED;
+  --cor-sucesso: #15402A;
+  --cor-sucesso-fundo: #EBF2EC;
+
+  /* Raios de Borda (generosos e suaves, estilo editorial) */
+  --raio-p: 10px;
+  --raio-m: 16px;
+  --raio-g: 22px;
+  --raio-redondo: 9999px;
+
+  /* Sombras sutis */
+  --sombra-cartao: 0 4px 16px rgba(16, 19, 16, 0.04), 0 1px 3px rgba(16, 19, 16, 0.02);
+  --sombra-flutuante: 0 10px 30px rgba(16, 19, 16, 0.12), 0 2px 6px rgba(16, 19, 16, 0.06);
+
+  /* Espaçamentos e Dimensões */
+  --largura-maxima-celular: 430px;
+  --altura-minima-toque: 52px;
+  --altura-barra-inferior: 72px;
+
+  /* Transições suaves */
+  --transicao-rapida: 150ms cubic-bezier(0.2, 0, 0, 1);
+  --transicao-padrao: 250ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* Escala de texto base */
+  --tamanho-base: 1rem;
+}
+
+/* 3. Variações de Tema resolvidas em JavaScript para compor com as paletas */
+:root[data-theme="escuro"] {
+  --cor-fundo: #0B0E0C;
+  --cor-superficie: #141914;
+  --cor-superficie-destaque: #1E251E;
+  --cor-texto: #EDF1E8;
+  --cor-texto-secundario: #A1ABA2;
+  --cor-borda: #A1ABA2;
+  --cor-borda-suave: rgba(237, 241, 232, 0.08);
+
+  --cor-primaria: #8DBF9B;
+  --cor-primaria-hover: #A5D1B1;
+  --cor-primaria-texto: #0B0E0C;
+
+  --cor-secundaria: #28382B;
+  --cor-secundaria-texto: #EDF1E8;
+
+  --cor-acento-lima: #D4F25A;
+  --cor-acento-lima-texto: #0B0E0C;
+
+  --cor-erro: #FF8080;
+  --cor-erro-fundo: #2D1414;
+  --cor-sucesso: #8DBF9B;
+  --cor-sucesso-fundo: #16261B;
+
+  --sombra-cartao: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --sombra-flutuante: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Alto contraste mantém a mesma paleta neutra para preservar a leitura */
+:root[data-theme="alto-contraste"] {
+  --cor-fundo: #000000;
+  --cor-superficie: #000000;
+  --cor-superficie-destaque: #111111;
+  --cor-texto: #FFFFFF;
+  --cor-texto-secundario: #FFFFFF;
+  --cor-borda: #FFFFFF;
+  --cor-borda-suave: #FFFFFF;
+
+  --cor-primaria: #FFFFFF;
+  --cor-primaria-hover: #EEEEEE;
+  --cor-primaria-texto: #000000;
+
+  --cor-secundaria: #000000;
+  --cor-secundaria-texto: #FFFFFF;
+
+  --cor-acento-lima: #D4F25A;
+  --cor-acento-lima-texto: #000000;
+
+  --cor-erro: #FFFFFF;
+  --cor-erro-fundo: #000000;
+  --cor-sucesso: #FFFFFF;
+  --cor-sucesso-fundo: #000000;
+
+  --sombra-cartao: none;
+  --sombra-flutuante: none;
+  --raio-p: 4px;
+  --raio-m: 6px;
+  --raio-g: 8px;
+}
+
+/* Paletas de destaque personalizáveis */
+:root[data-palette="oceano"][data-theme="claro"] {
+  --cor-fundo: #EAF1F0;
+  --cor-superficie-destaque: #D5E7E5;
+  --cor-texto: #123D44;
+  --cor-texto-secundario: #397078;
+  --cor-primaria: #175A63;
+  --cor-primaria-hover: #0F4249;
+  --cor-secundaria: #397078;
+  --cor-borda: #397078;
+}
+:root[data-palette="oceano"][data-theme="escuro"] {
+  --cor-fundo: #0A1416;
+  --cor-superficie: #112326;
+  --cor-superficie-destaque: #193539;
+  --cor-texto: #E9F7F7;
+  --cor-texto-secundario: #A8CDD1;
+  --cor-primaria: #82CED6;
+  --cor-primaria-hover: #A1DEE3;
+  --cor-primaria-texto: #0A1416;
+  --cor-secundaria: #3F7C84;
+  --cor-borda: #A8CDD1;
+}
+
+:root[data-palette="barro"][data-theme="claro"] {
+  --cor-fundo: #F0E5D8;
+  --cor-superficie-destaque: #E3D2BF;
+  --cor-texto: #63351F;
+  --cor-texto-secundario: #85513D;
+  --cor-primaria: #7A3F2A;
+  --cor-primaria-hover: #5E2E1D;
+  --cor-secundaria: #A65D43;
+  --cor-borda: #85513D;
+}
+:root[data-palette="barro"][data-theme="escuro"] {
+  --cor-fundo: #1B100B;
+  --cor-superficie: #291711;
+  --cor-superficie-destaque: #39231B;
+  --cor-texto: #FFF4EC;
+  --cor-texto-secundario: #DDB69F;
+  --cor-primaria: #E4A184;
+  --cor-primaria-hover: #F1B79D;
+  --cor-primaria-texto: #1B100B;
+  --cor-secundaria: #A65D43;
+  --cor-borda: #DDB69F;
+}
+
+:root[data-palette="grafite"][data-theme="claro"] {
+  --cor-fundo: #ECEDED;
+  --cor-superficie-destaque: #D9DDDD;
+  --cor-texto: #263238;
+  --cor-texto-secundario: #546E7A;
+  --cor-primaria: #263238;
+  --cor-primaria-hover: #102025;
+  --cor-secundaria: #546E7A;
+  --cor-borda: #546E7A;
+}
+:root[data-palette="grafite"][data-theme="escuro"] {
+  --cor-fundo: #111315;
+  --cor-superficie: #1A1E20;
+  --cor-superficie-destaque: #252B2E;
+  --cor-texto: #F2F5F5;
+  --cor-texto-secundario: #B0BEC5;
+  --cor-primaria: #B0BEC5;
+  --cor-primaria-hover: #D2DADD;
+  --cor-primaria-texto: #111315;
+  --cor-secundaria: #546E7A;
+  --cor-borda: #B0BEC5;
+}
+
+/* 4. Escalas de Tamanho de Texto (Ajustes de Acessibilidade) */
+:root[data-text-size="normal"] {
+  --tamanho-base: 1rem;       /* 16px */
+  --tamanho-cartao: 1.125rem;  /* 18px */
+}
+
+:root[data-text-size="grande"] {
+  --tamanho-base: 1.15rem;    /* ~18.5px */
+  --tamanho-cartao: 1.3rem;   /* ~21px */
+}
+
+:root[data-text-size="extra"] {
+  --tamanho-base: 1.3rem;     /* ~21px */
+  --tamanho-cartao: 1.5rem;   /* 24px */
+}
+
+:root[data-text-size="gigante"] {
+  --tamanho-base: 1.45rem;    /* ~23px */
+  --tamanho-cartao: 1.7rem;   /* ~27px */
+}
+
+/* 5. Escala de Tamanho dos Botões */
+:root[data-button-size="confortavel"] {
+  --altura-minima-toque: 52px;
+  --padding-botao: 14px 18px;
+}
+
+:root[data-button-size="grande"] {
+  --altura-minima-toque: 64px;
+  --padding-botao: 18px 24px;
+}

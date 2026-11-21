@@ -1,0 +1,456 @@
+/**
+ * ecoa - Prancha Digital de Comunicação Alternativa e Aumentativa (CAA)
+ * Projeto Acadêmico - Universidade Federal do Maranhão (UFMA)
+ * Módulo CSS: layout.css - Estrutura mobile-first, grid, cabeçalho e navegação inferior
+ */
+
+/* 1. Container Principal do Aplicativo (Mobile First 360px a 430px) */
+#app {
+  width: 100%;
+  max-width: var(--largura-maxima-celular);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: var(--cor-fundo);
+  box-shadow: 0 0 40px rgba(16, 19, 16, 0.06);
+}
+
+/* Em telas de desktop, adiciona bordas de apoio visual */
+@media (min-width: 600px) {
+  :root {
+    --largura-maxima-celular: 900px;
+  }
+  body {
+    background-color: var(--cor-superficie-destaque);
+    padding: 16px 0;
+  }
+  :root[data-theme="alto-contraste"] body {
+    background-color: #000000;
+  }
+  #app {
+    border-radius: var(--raio-g);
+    overflow: hidden;
+    min-height: calc(100vh - 32px);
+    border: 1px solid var(--cor-borda);
+  }
+}
+
+/* 2. Cabeçalho Superior */
+.cabecalho-principal {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: var(--cor-fundo);
+  padding: 14px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--cor-borda-suave);
+}
+
+.marca-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.marca-logo-img {
+  height: 30px;
+  width: auto;
+  max-width: 140px;
+  display: block;
+}
+
+.marca-subtitulo {
+  font-size: 0.75rem;
+  color: var(--cor-texto);
+  background-color: var(--cor-superficie-destaque);
+  padding: 2px 6px;
+  border-radius: var(--raio-p);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.saudacao-cabecalho {
+  margin-left: 2px;
+  font-family: var(--fonte-serifada);
+  font-size: 0.78rem;
+  color: var(--cor-texto-secundario);
+  white-space: nowrap;
+}
+
+:root[data-theme="escuro"] .marca-logo-img {
+  filter: brightness(0) invert(0.9) sepia(0.2) hue-rotate(80deg);
+}
+
+:root[data-theme="alto-contraste"] .marca-logo-img {
+  filter: brightness(0) invert(1);
+}
+
+.cabecalho-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icone-cabecalho {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--raio-m);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cor-texto);
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  transition: background-color var(--transicao-rapida), border-color var(--transicao-rapida);
+}
+
+.btn-icone-cabecalho:hover {
+  background-color: var(--cor-superficie-destaque);
+}
+
+.btn-icone-cabecalho.ativo {
+  background-color: var(--cor-acento-lima);
+  color: var(--cor-acento-lima-texto);
+  border-color: var(--cor-texto);
+}
+
+/* 3. Área de Conteúdo Principal Rolável */
+.conteudo-principal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--altura-barra-inferior) + 72px); /* Espaço para respostas rápidas + barra inferior */
+}
+
+#secao-frases {
+  padding-bottom: calc(var(--altura-barra-inferior) + 110px); /* Garante que o FAB e respostas rápidas nunca tapem o último item */
+}
+
+.tela {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px 16px 20px;
+}
+
+.tela[hidden] {
+  display: none !important;
+}
+
+/* 4. Cartão de Abertura Prominente e Fixo */
+.cartao-abertura-container {
+  position: relative;
+  background-color: var(--cor-superficie);
+  border: 1.5px solid var(--cor-borda);
+  border-radius: var(--raio-g);
+  padding: 18px 16px 14px;
+  box-shadow: var(--sombra-cartao);
+  cursor: pointer;
+  transition: transform var(--transicao-rapida), border-color var(--transicao-rapida), box-shadow var(--transicao-rapida);
+}
+
+.cartao-abertura-container:hover {
+  border-color: var(--cor-primaria);
+}
+
+.cartao-abertura-container.falando {
+  border-color: var(--cor-acento-lima);
+  box-shadow: 0 0 0 3px var(--cor-acento-lima);
+}
+
+.cartao-abertura-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cartao-abertura-etiqueta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cor-primaria);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cartao-abertura-texto {
+  font-size: var(--tamanho-cartao);
+  font-weight: 700;
+  color: var(--cor-texto);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.cartao-abertura-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-acao-abertura {
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: var(--raio-m);
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--cor-superficie-destaque);
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-borda);
+}
+
+.btn-acao-abertura.primario {
+  background-color: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
+  border-color: var(--cor-primaria);
+}
+
+.btn-acao-abertura.primario:hover {
+  background-color: var(--cor-primaria-hover);
+}
+
+/* 5. Faixa Horizontal Rolável de Contextos (Chips) */
+.faixa-contextos-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  margin: 0 -16px;
+  padding: 4px 16px 8px;
+  display: flex;
+  gap: 8px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.faixa-contextos-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.chip-contexto {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  min-height: 44px;
+  border-radius: var(--raio-redondo);
+  font-size: 0.95rem;
+  font-weight: 700;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-borda);
+  transition: all var(--transicao-rapida);
+}
+
+.chip-contexto:hover {
+  background-color: var(--cor-superficie-destaque);
+}
+
+.chip-contexto.ativo {
+  background-color: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
+  border-color: var(--cor-primaria);
+}
+
+/* 6. Grade de Cartões de Frases */
+.grade-frases {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+:root[data-grid-cols="2"] .grade-frases {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.cartao-frase.arrastando {
+  opacity: 0.55;
+  transform: scale(0.98);
+}
+
+@media (min-width: 600px) {
+  .grade-frases {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :root[data-grid-cols="1"] .grade-frases {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :root[data-grid-cols="2"] .grade-frases {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 7. Faixa Fixa de Respostas Rápidas (Acima da Barra Inferior) */
+.faixa-respostas-rapidas {
+  position: fixed;
+  bottom: var(--altura-barra-inferior);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--largura-maxima-celular);
+  z-index: 25;
+  background: var(--cor-fundo);
+  background: linear-gradient(180deg, rgba(242, 239, 231, 0) 0%, var(--cor-fundo) 30%);
+  padding: 10px 12px 6px;
+}
+
+:root[data-theme="escuro"] .faixa-respostas-rapidas {
+  background: linear-gradient(180deg, rgba(11, 14, 12, 0) 0%, var(--cor-fundo) 30%);
+}
+
+:root[data-theme="alto-contraste"] .faixa-respostas-rapidas {
+  background: #000000;
+  border-top: 2px solid #FFFFFF;
+}
+
+.grade-respostas-rapidas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.btn-resposta-rapida {
+  width: 100%;
+  min-height: 52px;
+  padding: 6px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: max(13px, calc(var(--tamanho-base) * 0.85));
+  font-weight: 700;
+  border-radius: var(--raio-m);
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-borda);
+  box-shadow: 0 2px 6px rgba(16, 19, 16, 0.05);
+  transition: all var(--transicao-rapida);
+  text-align: center;
+}
+
+.btn-resposta-rapida span {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+.btn-resposta-rapida:active {
+  transform: scale(0.97);
+  background-color: var(--cor-acento-lima);
+  color: var(--cor-acento-lima-texto);
+}
+
+/* 8. Barra de Navegação Inferior (3 Abas Principais) */
+.navegacao-inferior {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--largura-maxima-celular);
+  height: var(--altura-barra-inferior);
+  background-color: var(--cor-superficie);
+  border-top: 1px solid var(--cor-borda);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  z-index: 30;
+  box-shadow: 0 -4px 16px rgba(16, 19, 16, 0.04);
+}
+
+.nav-btn {
+  flex: 1;
+  height: 56px;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--raio-m);
+  color: var(--cor-texto-secundario);
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: color var(--transicao-rapida), background-color var(--transicao-rapida);
+}
+
+.nav-btn:hover {
+  color: var(--cor-texto);
+}
+
+.nav-btn.ativo {
+  color: var(--cor-primaria);
+  background-color: var(--cor-borda-suave);
+}
+
+:root[data-theme="alto-contraste"] .nav-btn.ativo {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 2px solid #FFFFFF;
+}
+
+/* 9. Botão Flutuante de Ação (FAB) para Adicionar Frase */
+.fab-adicionar {
+  position: fixed;
+  right: calc(50% - (var(--largura-maxima-celular) / 2) + 16px);
+  bottom: calc(var(--altura-barra-inferior) + 64px);
+  width: 58px;
+  height: 58px;
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: var(--raio-redondo);
+  background-color: var(--cor-primaria);
+  color: var(--cor-primaria-texto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sombra-flutuante);
+  z-index: 28;
+  border: 2px solid var(--cor-superficie);
+  transition: transform var(--transicao-rapida), background-color var(--transicao-rapida);
+}
+
+.fab-adicionar[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 440px) {
+  .fab-adicionar {
+    right: 16px;
+  }
+}
+
+.fab-adicionar:active {
+  transform: scale(0.92);
+}
+
+:root[data-theme="alto-contraste"] .fab-adicionar {
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 3px solid #FFFFFF;
+}

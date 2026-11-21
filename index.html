@@ -1,0 +1,1422 @@
+<!doctype html>
+<html
+  lang="pt-BR"
+  data-theme="auto"
+  data-text-size="normal"
+  data-button-size="confortavel"
+  data-grid-cols="1"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#EAE4D7" />
+    <meta
+      name="description"
+      content="Ecoa: Prancha digital de comunicação com voz para serviços universitários (UFMA)."
+    />
+
+    <title>Ecoa — Prancha Digital com Voz</title>
+
+    <!-- PWA Manifest e Ícones Locais Oficiais -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="assets/brand/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/brand/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href="assets/brand/favicon-48.png"
+    />
+    <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+
+    <!-- Estilos CSS Modulares (Zero dependências externas) -->
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+  </head>
+  <body>
+    <!-- Região Acessível para Anúncios em Leitores de Tela -->
+    <div
+      id="aria-live-anuncios"
+      class="sr-only"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <div id="app">
+      <!-- 1. Cabeçalho Principal -->
+      <header class="cabecalho-principal" role="banner">
+        <div class="marca-container">
+          <img
+            src="assets/brand/ecoa-logo-horizontal.svg"
+            alt="Ecoa"
+            class="marca-logo-img"
+            height="30"
+          />
+          <span class="marca-subtitulo">UFMA</span>
+          <span
+            id="saudacao-cabecalho"
+            class="saudacao-cabecalho"
+            aria-label="Saudação"
+          ></span>
+        </div>
+        <div class="cabecalho-acoes">
+          <button
+            type="button"
+            class="btn-icone-cabecalho"
+            id="btn-topo-editar"
+            title="Alternar modo de edição de frases"
+            aria-label="Alternar modo de edição de frases"
+            aria-pressed="false"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+              <path d="m15 5 4 4"></path>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="btn-icone-cabecalho"
+            id="btn-topo-ajustes"
+            title="Abrir ajustes"
+            aria-label="Abrir ajustes"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              ></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- 2. Área de Conteúdo das Telas -->
+      <main class="conteudo-principal">
+        <!-- TELA 1: FRASES (Principal) -->
+        <section
+          id="secao-frases"
+          class="tela tela-ativa"
+          aria-label="Prancha de frases"
+        >
+          <!-- Banner de aviso se o aparelho não tiver voz pt-BR -->
+          <div
+            id="banner-aviso-voz"
+            class="banner-aviso-voz"
+            hidden
+            role="alert"
+          >
+            <div>
+              <strong>Aviso de Voz:</strong> Seu aparelho não possui voz em
+              português (pt-BR) instalada. Vá nas configurações de
+              acessibilidade do seu celular para baixar a voz em português.
+            </div>
+            <button
+              type="button"
+              class="btn-fechar-aviso"
+              id="btn-fechar-aviso-voz"
+              aria-label="Fechar aviso de voz"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Cartão de Abertura Prominente e Fixo -->
+          <div
+            id="cartao-abertura"
+            class="cartao-abertura-container"
+            role="region"
+            aria-label="Frase de abertura"
+          >
+            <div class="cartao-abertura-cabecalho">
+              <span class="cartao-abertura-etiqueta">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 16v-4"></path>
+                  <path d="M12 8h.01"></path>
+                </svg>
+                Abertura
+              </span>
+              <button
+                type="button"
+                class="btn-icone-cabecalho"
+                id="btn-editar-abertura"
+                style="
+                  width: 34px;
+                  height: 34px;
+                  min-width: 34px;
+                  min-height: 34px;
+                "
+                title="Editar frase de abertura"
+                aria-label="Editar frase de abertura"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+                  ></path>
+                  <path d="m15 5 4 4"></path>
+                </svg>
+              </button>
+            </div>
+            <p id="cartao-abertura-texto" class="cartao-abertura-texto">
+              Olá! Eu me comunico por esta tela. Pode aguardar um instante?
+            </p>
+            <div class="cartao-abertura-acoes">
+              <button
+                type="button"
+                class="btn-acao-abertura"
+                id="btn-palco-abertura"
+                title="Abrir abertura no Palco"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <polyline points="9 21 3 21 3 15"></polyline>
+                  <line x1="21" x2="14" y1="3" y2="10"></line>
+                  <line x1="3" x2="10" y1="21" y2="14"></line>
+                </svg>
+                Palco
+              </button>
+              <button
+                type="button"
+                class="btn-acao-abertura primario"
+                id="btn-falar-abertura"
+                title="Falar abertura"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                Falar
+              </button>
+            </div>
+          </div>
+
+          <!-- Faixa Horizontal de Contextos -->
+          <nav
+            class="faixa-contextos-container"
+            id="faixa-contextos"
+            aria-label="Filtrar frases por contexto"
+          >
+            <!-- Gerado dinamicamente via interface.js -->
+          </nav>
+
+          <!-- Grade de Cartões de Frase -->
+          <div
+            class="grade-frases"
+            id="grade-frases"
+            role="feed"
+            aria-label="Lista de frases"
+          >
+            <!-- Preenchido via interface.js -->
+          </div>
+        </section>
+
+        <!-- TELA 2: DIGITAR (Livre) -->
+        <section
+          id="secao-digitar"
+          class="tela"
+          hidden
+          aria-label="Digitar mensagem livre"
+        >
+          <div class="area-digitar">
+            <label for="input-digitar-livre" class="rotulo-ajuste"
+              >Digite o que deseja falar:</label
+            >
+            <textarea
+              id="input-digitar-livre"
+              class="textarea-digitar"
+              placeholder="Escreva sua frase aqui..."
+              rows="4"
+            ></textarea>
+
+            <div class="acoes-digitar">
+              <button
+                type="button"
+                class="btn-digitar-falar"
+                id="btn-digitar-falar"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                Falar agora
+              </button>
+              <button
+                type="button"
+                class="btn-digitar-palco"
+                id="btn-digitar-palco"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <polyline points="9 21 3 21 3 15"></polyline>
+                  <line x1="21" x2="14" y1="3" y2="10"></line>
+                  <line x1="3" x2="10" y1="21" y2="14"></line>
+                </svg>
+                Palco
+              </button>
+              <button
+                type="button"
+                class="btn-digitar-salvar"
+                id="btn-digitar-salvar"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"
+                  ></path>
+                </svg>
+                Salvar como frase
+              </button>
+              <button
+                type="button"
+                class="btn-digitar-limpar"
+                id="btn-digitar-limpar"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
+                Limpar
+              </button>
+            </div>
+
+            <!-- Histórico das últimas frases faladas -->
+            <div class="secao-historico-digitado">
+              <div class="cabecalho-historico">
+                <h3>Frases faladas recentes</h3>
+                <button
+                  type="button"
+                  class="btn-acao-edicao"
+                  id="btn-limpar-historico"
+                  title="Limpar histórico"
+                >
+                  Limpar
+                </button>
+              </div>
+              <div class="lista-historico" id="lista-historico-digitado">
+                <!-- Preenchido via interface.js -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TELA 3: AJUSTES (Configurações e Acessibilidade) -->
+        <section
+          id="secao-ajustes"
+          class="tela"
+          hidden
+          aria-label="Ajustes do aplicativo"
+        >
+          <!-- Pré-visualização ao vivo -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">Pré-visualização</h2>
+            <div id="previa-ajustes" class="previa-ajustes">
+              <span id="previa-ajustes-texto">Olá! Posso falar pela tela.</span>
+              <button
+                type="button"
+                class="btn-preview"
+                aria-label="Exemplo de botão"
+              >
+                Falar
+              </button>
+            </div>
+          </div>
+
+          <!-- Tema -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">Tema</h2>
+            <div class="amostras-tema" role="group" aria-label="Escolher tema">
+              <button
+                type="button"
+                class="amostra-tema amostra-auto"
+                data-ajuste-tema="auto"
+                aria-pressed="false"
+              >
+                <span></span>Automático
+              </button>
+              <button
+                type="button"
+                class="amostra-tema amostra-claro"
+                data-ajuste-tema="claro"
+                aria-pressed="false"
+              >
+                <span></span>Claro
+              </button>
+              <button
+                type="button"
+                class="amostra-tema amostra-escuro"
+                data-ajuste-tema="escuro"
+                aria-pressed="false"
+              >
+                <span></span>Escuro
+              </button>
+              <button
+                type="button"
+                class="amostra-tema amostra-contraste"
+                data-ajuste-tema="alto-contraste"
+                aria-pressed="false"
+              >
+                <span></span>Alto contraste
+              </button>
+            </div>
+          </div>
+
+          <!-- Tamanhos e colunas -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">Tamanho e disposição</h2>
+            <div class="item-ajuste">
+              <span class="rotulo-ajuste">Tamanho do texto</span>
+              <div
+                class="controle-segmentado"
+                role="group"
+                aria-label="Tamanho do texto"
+              >
+                <button
+                  type="button"
+                  data-ajuste-texto="normal"
+                  aria-label="Texto normal"
+                >
+                  A
+                </button>
+                <button
+                  type="button"
+                  data-ajuste-texto="grande"
+                  aria-label="Texto grande"
+                >
+                  A
+                </button>
+                <button
+                  type="button"
+                  data-ajuste-texto="extra"
+                  aria-label="Texto extra grande"
+                >
+                  A
+                </button>
+                <button
+                  type="button"
+                  data-ajuste-texto="gigante"
+                  aria-label="Texto gigante"
+                >
+                  A
+                </button>
+              </div>
+            </div>
+            <div class="item-ajuste">
+              <span class="rotulo-ajuste">Tamanho dos botões</span>
+              <div
+                class="controle-segmentado"
+                role="group"
+                aria-label="Tamanho dos botões"
+              >
+                <button type="button" data-ajuste-botao="confortavel">
+                  52 px
+                </button>
+                <button type="button" data-ajuste-botao="grande">64 px</button>
+              </div>
+            </div>
+            <div class="item-ajuste">
+              <span class="rotulo-ajuste">Colunas</span>
+              <div
+                class="controle-segmentado"
+                role="group"
+                aria-label="Colunas da grade"
+              >
+                <button type="button" data-ajuste-colunas="1">1</button>
+                <button type="button" data-ajuste-colunas="2">2</button>
+              </div>
+              <p class="dica-ajuste">Em 2 colunas, o pictograma fica acima e a frase usa fonte compacta.</p>
+            </div>
+          </div>
+
+          <!-- Personalização de nome e paleta -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">Personalizar</h2>
+            <div class="item-ajuste">
+              <label for="ajuste-nome" class="rotulo-ajuste">Meu nome</label>
+              <input
+                id="ajuste-nome"
+                type="text"
+                maxlength="40"
+                placeholder="Opcional"
+                autocomplete="name"
+              />
+            </div>
+            <div class="item-ajuste">
+              <span class="rotulo-ajuste">Paleta de destaque</span>
+              <div
+                class="paletas-destaque"
+                role="group"
+                aria-label="Paleta de destaque"
+              >
+                <button type="button" data-paleta="cacto" aria-pressed="false">
+                  <span class="paleta-amostra cacto"></span>Cacto
+                </button>
+                <button type="button" data-paleta="oceano" aria-pressed="false">
+                  <span class="paleta-amostra oceano"></span>Oceano
+                </button>
+                <button type="button" data-paleta="barro" aria-pressed="false">
+                  <span class="paleta-amostra barro"></span>Barro
+                </button>
+                <button
+                  type="button"
+                  data-paleta="grafite"
+                  aria-pressed="false"
+                >
+                  <span class="paleta-amostra grafite"></span>Grafite
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Síntese de Voz -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              Voz e Fala (Web Speech API)
+            </h2>
+            <div class="item-ajuste">
+              <label for="ajuste-voz" class="rotulo-ajuste"
+                >Voz do sintetizador:</label
+              >
+              <select id="ajuste-voz" class="select-ajuste">
+                <option value="">Carregando vozes...</option>
+              </select>
+              <p
+                id="voz-selecionada-info"
+                class="dica-ajuste"
+                aria-live="polite"
+              ></p>
+              <div style="margin-top: 6px">
+                <label
+                  style="
+                    font-size: 0.85rem;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    cursor: pointer;
+                    color: var(--cor-texto-secundario);
+                  "
+                >
+                  <input type="checkbox" id="toggle-outras-vozes" />
+                  Mostrar vozes de outros idiomas
+                </label>
+              </div>
+            </div>
+            <div class="item-ajuste">
+              <div class="item-ajuste-linha">
+                <label for="ajuste-velocidade-voz" class="rotulo-ajuste"
+                  >Velocidade da fala:</label
+                >
+                <span id="valor-velocidade-voz" class="valor-slider">1.0x</span>
+              </div>
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="ajuste-velocidade-voz"
+                  class="slider-ajuste"
+                  min="0.5"
+                  max="2.0"
+                  step="0.1"
+                  value="1.0"
+                />
+              </div>
+            </div>
+            <div class="item-ajuste">
+              <div class="item-ajuste-linha">
+                <label for="ajuste-tom-voz" class="rotulo-ajuste"
+                  >Tom da voz (grave / agudo):</label
+                >
+                <span id="valor-tom-voz" class="valor-slider">1.0x</span>
+              </div>
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="ajuste-tom-voz"
+                  class="slider-ajuste"
+                  min="0.5"
+                  max="1.5"
+                  step="0.1"
+                  value="1.0"
+                />
+              </div>
+              <p class="dica-ajuste">
+                O tom altera apenas o grave/agudo disponível pelo aparelho; ele
+                não garante uma voz masculina ou feminina.
+              </p>
+            </div>
+            <button type="button" class="btn-secundario" id="btn-testar-voz">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              Ouvir teste de voz
+            </button>
+            <button type="button" class="btn-secundario" id="btn-restaurar-voz">
+              Restaurar velocidade e tom
+            </button>
+          </div>
+
+          <!-- Acessibilidade Adicional -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m4.93 4.93 4.24 4.24"></path>
+                <path d="m14.83 9.17 4.24-4.24"></path>
+                <path d="m14.83 14.83 4.24 4.24"></path>
+                <path d="m9.17 14.83-4.24 4.24"></path>
+                <circle cx="12" cy="12" r="4"></circle>
+              </svg>
+              Acessibilidade e Conforto
+            </h2>
+            <div class="item-ajuste-linha">
+              <div>
+                <div class="rotulo-ajuste">Reduzir animações</div>
+                <div class="dica-ajuste">
+                  Desativa efeitos visuais em movimento
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ajuste-reduzir-animacoes" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="item-ajuste-linha">
+              <div>
+                <div class="rotulo-ajuste">Vibração ao tocar</div>
+                <div class="dica-ajuste">Feedback tátil háptico no celular</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ajuste-vibracao" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="item-ajuste-linha">
+              <div>
+                <div class="rotulo-ajuste">Mostrar pictogramas</div>
+                <div class="dica-ajuste">Exibe ícones visuais nos cartões</div>
+              </div>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="ajuste-mostrar-pictogramas"
+                  checked
+                />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button
+              type="button"
+              class="btn-secundario"
+              id="btn-rever-boas-vindas"
+            >
+              Rever boas-vindas
+            </button>
+            <button
+              type="button"
+              class="btn-secundario"
+              id="btn-editar-respostas"
+            >
+              Personalizar respostas rápidas
+            </button>
+          </div>
+
+          <!-- Backup e Dados (Exportar / Importar) -->
+          <div class="grupo-ajustes">
+            <h2 class="titulo-grupo-ajustes">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" x2="12" y1="15" y2="3"></line>
+              </svg>
+              Backup e Frases
+            </h2>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-exportar-dados"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" x2="12" y1="15" y2="3"></line>
+                </svg>
+                Exportar frases em arquivo JSON
+              </button>
+              <input
+                type="file"
+                id="input-importar-arquivo"
+                accept=".json,application/json"
+                style="display: none"
+              />
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-acionar-importar"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" x2="12" y1="3" y2="15"></line>
+                </svg>
+                Importar frases de arquivo JSON
+              </button>
+              <div id="aviso-importacao" hidden></div>
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-restaurar-padroes"
+                style="color: var(--cor-erro); margin-top: 8px"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+                  ></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                Restaurar frases iniciais de fábrica
+              </button>
+            </div>
+          </div>
+
+          <!-- Informações Acadêmicas (UFMA) -->
+          <div class="bloco-academico">
+            <p><strong>Ecoa — Prancha Digital Universitária</strong></p>
+            <p>
+              Projeto acadêmico desenvolvido para a
+              <strong>Universidade Federal do Maranhão (UFMA)</strong> com foco
+              em Tecnologia Assistiva e Comunicação Alternativa e Aumentativa
+              (CAA).
+            </p>
+            <p>
+              Construído em HTML, CSS e JavaScript puros (Módulos ES).
+              Compatível com PWA 100% offline.
+            </p>
+            <p
+              id="status-offline-app"
+              class="status-offline-app"
+              role="status"
+              aria-live="polite"
+            >
+              Verificando disponibilidade offline...
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <!-- 3. Faixa Fixa de Respostas Rápidas (Acima da Barra Inferior) -->
+      <aside
+        id="faixa-respostas-rapidas"
+        class="faixa-respostas-rapidas"
+        aria-label="Respostas rápidas frequentes"
+      >
+        <div class="grade-respostas-rapidas" id="grade-respostas-rapidas">
+          <!-- Preenchido via interface.js -->
+        </div>
+      </aside>
+
+      <!-- 4. Botão Flutuante (FAB) para Adicionar Nova Frase -->
+      <button
+        type="button"
+        class="fab-adicionar"
+        id="fab-adicionar-frase"
+        title="Adicionar nova frase"
+        aria-label="Adicionar nova frase"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14"></path>
+          <path d="M12 5v14"></path>
+        </svg>
+      </button>
+
+      <!-- 5. Barra Inferior de Navegação (3 Abas) -->
+      <nav
+        class="navegacao-inferior"
+        id="navegacao-inferior"
+        role="navigation"
+        aria-label="Navegação do app"
+      >
+        <button
+          type="button"
+          class="nav-btn ativo"
+          data-aba="frases"
+          aria-selected="true"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+            ></path>
+          </svg>
+          <span>Frases</span>
+        </button>
+        <button
+          type="button"
+          class="nav-btn"
+          data-aba="digitar"
+          aria-selected="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+            <path d="M6 8h.001"></path>
+            <path d="M10 8h.001"></path>
+            <path d="M14 8h.001"></path>
+            <path d="M18 8h.001"></path>
+            <path d="M8 12h.001"></path>
+            <path d="M12 12h.001"></path>
+            <path d="M16 12h.001"></path>
+            <path d="M7 16h10"></path>
+          </svg>
+          <span>Digitar</span>
+        </button>
+        <button
+          type="button"
+          class="nav-btn"
+          data-aba="ajustes"
+          aria-selected="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            ></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>Ajustes</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- 6. MODO PALCO (Diferencial Principal: Tela Cheia com Busca Binária de Tipografia) -->
+    <aside
+      id="modal-modo-palco"
+      class="modal-palco"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Modo Palco em destaque"
+    >
+      <div class="palco-topo">
+        <div class="palco-marca-logo">
+          <img
+            src="assets/brand/ecoa-simbolo-escuro.svg"
+            alt="Ecoa"
+            class="palco-simbolo-img"
+            width="34"
+            height="34"
+          />
+        </div>
+        <button
+          type="button"
+          id="palco-btn-fechar"
+          class="palco-btn-fechar"
+          aria-label="Fechar Modo Palco"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+          <span>Fechar</span>
+        </button>
+      </div>
+
+      <div
+        class="palco-area-leitura"
+        id="palco-area-leitura"
+        title="Toque na tela para falar novamente"
+      >
+        <div class="palco-ondas" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p id="palco-texto" class="palco-texto"></p>
+      </div>
+
+      <div class="palco-rodape">
+        <span class="palco-dica-toque"
+          >Toque em qualquer lugar para falar de novo</span
+        >
+        <button
+          type="button"
+          id="palco-btn-falar"
+          class="palco-btn-falar"
+          aria-label="Falar frase em voz alta"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <span>Falar Frase</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- 7. MODAL: EDITAR CARTÃO DE ABERTURA -->
+    <div
+      id="modal-editar-abertura"
+      class="modal-overlay"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-abertura-titulo"
+    >
+      <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+          <h2 id="modal-abertura-titulo" class="modal-titulo">
+            Editar Frase de Abertura
+          </h2>
+        </div>
+        <div class="item-ajuste">
+          <label for="input-abertura-texto" class="rotulo-ajuste"
+            >Texto de apresentação inicial:</label
+          >
+          <textarea
+            id="input-abertura-texto"
+            class="textarea-digitar"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="modal-rodape">
+          <button
+            type="button"
+            class="btn-secundario"
+            id="btn-cancelar-abertura"
+          >
+            Cancelar
+          </button>
+          <button type="button" class="btn-primario" id="btn-salvar-abertura">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. MODAL: ADICIONAR / EDITAR FRASE -->
+    <div
+      id="modal-editar-frase"
+      class="modal-overlay"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-frase-titulo"
+    >
+      <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+          <h2 id="modal-frase-titulo" class="modal-titulo">Nova frase</h2>
+        </div>
+        <form id="form-editar-frase" class="item-ajuste" style="gap: 14px">
+          <input type="hidden" id="input-frase-id" />
+
+          <div class="item-ajuste">
+            <label for="input-frase-texto" class="rotulo-ajuste"
+              >Texto da frase:</label
+            >
+            <textarea
+              id="input-frase-texto"
+              class="textarea-digitar"
+              rows="3"
+              required
+              placeholder="Ex: Preciso de uma informação"
+            ></textarea>
+          </div>
+
+          <div class="item-ajuste">
+            <label for="select-frase-contexto" class="rotulo-ajuste"
+              >Contexto / Categoria:</label
+            >
+            <select id="select-frase-contexto" class="select-ajuste">
+              <!-- Populado via interface.js -->
+            </select>
+          </div>
+
+          <div class="item-ajuste">
+            <label class="rotulo-ajuste">Escolha um pictograma:</label>
+            <div id="grade-seletor-icones" class="seletor-icones-grid">
+              <!-- Populado via interface.js -->
+            </div>
+          </div>
+
+          <div class="item-ajuste">
+            <label for="input-frase-emoji" class="rotulo-ajuste"
+              >Ou use um Emoji personalizado (opcional):</label
+            >
+            <input
+              type="text"
+              id="input-frase-emoji"
+              style="padding: 10px 14px; font-size: 1.2rem"
+              maxlength="4"
+              placeholder="Ex: 📚, 🍲, 🙋"
+            />
+          </div>
+
+          <div class="modal-rodape">
+            <button
+              type="button"
+              class="btn-secundario"
+              id="btn-cancelar-frase"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primario" id="btn-salvar-frase">
+              Salvar frase
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 9. MODAL: CONFIRMAR RESTAURAÇÃO DE PADRÕES -->
+    <div
+      id="modal-confirmar-restauracao"
+      class="modal-overlay"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-restaurar-titulo"
+    >
+      <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+          <h2 id="modal-restaurar-titulo" class="modal-titulo">
+            Restaurar frases iniciais?
+          </h2>
+        </div>
+        <p>
+          Todas as frases personalizadas serão substituídas pela lista inicial
+          de fábrica da UFMA. Esta ação não poderá ser desfeita.
+        </p>
+        <div class="modal-rodape">
+          <button type="button" class="btn-secundario" id="btn-confirmar-nao">
+            Cancelar
+          </button>
+          <button type="button" class="btn-perigo" id="btn-confirmar-sim">
+            Sim, restaurar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. BOAS-VINDAS NA PRIMEIRA ABERTURA -->
+    <div
+      id="modal-boas-vindas"
+      class="modal-overlay"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="boas-vindas-titulo"
+    >
+      <div class="modal-conteudo boas-vindas-conteudo">
+        <button
+          type="button"
+          class="btn-fechar-modal"
+          id="btn-boas-vindas-fechar"
+          aria-label="Fechar boas-vindas"
+        >
+          ×
+        </button>
+        <img
+          src="assets/brand/ecoa-logo-completo.svg"
+          alt="Ecoa"
+          class="boas-vindas-logo"
+        />
+        <section data-passo-boas-vindas>
+          <h2 id="boas-vindas-titulo">O Ecoa ajuda você a se comunicar</h2>
+          <p>
+            Use frases prontas, digite uma mensagem ou destaque o texto em tela
+            cheia.
+          </p>
+        </section>
+        <section data-passo-boas-vindas hidden>
+          <h2>Como falar</h2>
+          <p>
+            Toque em uma frase para ouvir. Use Palco para mostrar uma mensagem
+            maior.
+          </p>
+        </section>
+        <section data-passo-boas-vindas hidden>
+          <h2>Personalize sua experiência</h2>
+          <p>
+            Estas escolhas são opcionais, ficam salvas neste aparelho e podem
+            ser alteradas depois.
+          </p>
+          <div class="boas-vindas-preferencias">
+            <div class="item-ajuste">
+              <label for="boas-vindas-nome" class="rotulo-ajuste"
+                >Como gostaria de ser chamado(a)?</label
+              >
+              <input
+                id="boas-vindas-nome"
+                type="text"
+                maxlength="40"
+                placeholder="Opcional"
+                autocomplete="name"
+              />
+            </div>
+            <div class="item-ajuste">
+              <label for="boas-vindas-voz" class="rotulo-ajuste"
+                >Voz em português</label
+              >
+              <select id="boas-vindas-voz" class="select-ajuste">
+                <option value="">Carregando vozes do aparelho...</option>
+              </select>
+              <p
+                id="boas-vindas-voz-info"
+                class="dica-ajuste"
+                aria-live="polite"
+              >
+                As vozes disponíveis dependem do aparelho.
+              </p>
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-boas-vindas-testar-voz"
+              >
+                Ouvir voz de teste
+              </button>
+            </div>
+          </div>
+        </section>
+        <span id="boas-vindas-indicador" class="boas-vindas-indicador"
+          >1 de 3</span
+        >
+        <div class="modal-rodape">
+          <button
+            type="button"
+            class="btn-secundario"
+            id="btn-boas-vindas-pular"
+          >
+            Pular
+          </button>
+          <button
+            type="button"
+            class="btn-primario"
+            id="btn-boas-vindas-avancar"
+          >
+            Próximo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. MODAL: PERSONALIZAR RESPOSTAS RÁPIDAS -->
+    <div
+      id="modal-respostas-rapidas"
+      class="modal-overlay"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-respostas-titulo"
+    >
+      <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+          <h2 id="modal-respostas-titulo" class="modal-titulo">
+            Respostas rápidas
+          </h2>
+        </div>
+        <div id="lista-editar-respostas" class="lista-editar-respostas"></div>
+        <div class="modal-rodape">
+          <button
+            type="button"
+            class="btn-secundario"
+            id="btn-restaurar-respostas"
+          >
+            Restaurar padrões
+          </button>
+          <button
+            type="button"
+            class="btn-secundario"
+            id="btn-cancelar-respostas"
+          >
+            Cancelar
+          </button>
+          <button type="button" class="btn-primario" id="btn-salvar-respostas">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. TOAST COM "DESFAZER" (Exclusão Acessível sem Diálogo Bloqueante) -->
+    <div
+      id="toast-desfazer"
+      class="toast-desfazer"
+      role="status"
+      aria-live="polite"
+      aria-hidden="true"
+    >
+      <span id="toast-desfazer-texto">Frase removida.</span>
+      <button type="button" class="btn-toast-desfazer" id="btn-toast-desfazer">
+        Desfazer
+      </button>
+    </div>
+
+    <!-- Script Principal como Módulo ES -->
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
