@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn(`[${APP_NAME}] Aviso ao carregar vozes:`, erro);
   }
 
-  // Registra o Service Worker para funcionamento 100% offline (PWA)
+  // Armazena os recursos locais no Service Worker para permitir uso offline.
   registrarServiceWorker();
 });
 

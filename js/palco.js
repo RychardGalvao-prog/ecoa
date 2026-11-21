@@ -93,6 +93,9 @@ export async function abrirModoPalco(texto) {
   containerPalco.setAttribute('aria-hidden', 'false');
   document.body.classList.add('palco-aberto');
 
+  // Mantém a fala no gesto do usuário para navegadores móveis mais restritivos.
+  repetirFala();
+
   // Ajusta o tamanho da fonte via busca binária após renderização do layout
   await ajustarTamanhoFonteBinario();
 
@@ -101,9 +104,6 @@ export async function abrirModoPalco(texto) {
 
   // Ativa Screen Wake Lock para manter a tela do celular acesa
   ativarWakeLock();
-
-  // Fala a frase automaticamente ao entrar no palco
-  repetirFala();
 }
 
 /**

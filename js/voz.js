@@ -89,15 +89,15 @@ export function carregarVozes() {
       return true;
     }
 
+    // Mantém a lista sincronizada quando o sistema instala ou disponibiliza vozes.
+    sintetizador.onvoiceschanged = atualizarLista;
+
     // Se as vozes já estiverem disponíveis imediatamente
     const iniciais = sintetizador.getVoices();
     if (iniciais && iniciais.length > 0) {
       atualizarLista();
     } else {
       // Carregamento assíncrono padrão da Web Speech API
-      sintetizador.onvoiceschanged = () => {
-        atualizarLista();
-      };
       // Evita deixar a tela presa em "Carregando" se o sistema não informar vozes
       setTimeout(() => {
         if (!atualizarLista()) concluir([]);
@@ -207,8 +207,10 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
     return false;
   }
 
-  // Cancela fala anterior imediatamente para evitar sobreposição
-  parar();
+  // Evita cancelar o sintetizador vazio, o que pode bloquear a fala no Safari móvel.
+  if (estaFalando || sintetizador.speaking || sintetizador.pending) {
+    parar();
+  }
 
   const ajustes = obterAjustes();
   const proferimento = new SpeechSynthesisUtterance(textoLimpo);

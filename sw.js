@@ -1,11 +1,11 @@
 /**
  * ecoa - Prancha Digital de Comunicação Alternativa e Aumentativa (CAA)
  * Projeto Acadêmico - Universidade Federal do Maranhão (UFMA)
- * Service Worker: sw.js - Cache 100% offline para funcionamento sem conexão
- * Versão 2 - Ajustes de experiência
+ * Service Worker: sw.js - Cache de recursos locais para uso offline
+ * Cache v7 - Atualização de vozes do sistema em navegadores móveis
  */
 
-const CACHE_NAME = 'ecoa-app-cache-v4';
+const CACHE_NAME = 'ecoa-app-cache-v7';
 
 // Lista de todos os recursos locais essenciais para o funcionamento offline
 const RECURSOS_PARA_CACHE = [
@@ -103,7 +103,7 @@ const RECURSOS_PARA_CACHE = [
 self.addEventListener('install', (evento) => {
   evento.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker Ecoa v2] Pré-armazenando arquivos para uso offline...');
+      console.log('[Service Worker Ecoa v7] Pré-armazenando arquivos para uso offline...');
       return cache.addAll(RECURSOS_PARA_CACHE);
     }).then(() => {
       return self.skipWaiting();
@@ -118,7 +118,7 @@ self.addEventListener('activate', (evento) => {
       return Promise.all(
         nomesCaches.map((nome) => {
           if (nome !== CACHE_NAME) {
-            console.log('[Service Worker Ecoa v2] Removendo cache obsoleto:', nome);
+            console.log('[Service Worker Ecoa v7] Removendo cache obsoleto:', nome);
             return caches.delete(nome);
           }
         })

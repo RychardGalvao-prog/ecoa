@@ -49,6 +49,18 @@ let cartaoAberturaTexto = null;
 let bannerAvisoVoz = null;
 let toastDesfazer = null;
 
+const CARACTERES_HTML = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+};
+
+function escaparHtml(valor) {
+  return String(valor).replace(/[&<>"']/g, caractere => CARACTERES_HTML[caractere]);
+}
+
 // Monta a frase de abertura com o nome opcional do usuário
 function obterFraseAberturaPersonalizada() {
   const nome = obterNomeUsuario();
@@ -446,11 +458,13 @@ export function renderizarGradeFrases() {
     const textoExibido = frase.texto === 'Meu nome é ____.' && obterNomeUsuario()
       ? `Meu nome é ${obterNomeUsuario()}.`
       : frase.texto;
+    const textoHtml = escaparHtml(textoExibido);
+    const idHtml = escaparHtml(frase.id);
 
     // Pictograma (SVG ou Emoji)
     let pictogramaHtml = '';
     if (frase.emoji) {
-      pictogramaHtml = `<span class="cartao-emoji" aria-hidden="true">${frase.emoji}</span>`;
+      pictogramaHtml = `<span class="cartao-emoji" aria-hidden="true">${escaparHtml(frase.emoji)}</span>`;
     } else {
       pictogramaHtml = renderIcone(frase.icone || 'message-square', 'cartao-icone', 28);
     }
@@ -460,16 +474,16 @@ export function renderizarGradeFrases() {
     if (modoEdicaoAtivo) {
       acoesEdicaoHtml = `
         <div class="cartao-acoes-edicao" role="toolbar" aria-label="Ações de edição da frase">
-          <button type="button" class="btn-acao-edicao btn-subir" data-id="${frase.id}" title="Mover para cima" aria-label="Mover para cima" ${index === 0 ? 'disabled' : ''}>
+          <button type="button" class="btn-acao-edicao btn-subir" data-id="${idHtml}" title="Mover para cima" aria-label="Mover para cima" ${index === 0 ? 'disabled' : ''}>
             ${renderIcone('arrow-up', '', 18)}
           </button>
-          <button type="button" class="btn-acao-edicao btn-descer" data-id="${frase.id}" title="Mover para baixo" aria-label="Mover para baixo" ${index === frasesFiltradas.length - 1 ? 'disabled' : ''}>
+          <button type="button" class="btn-acao-edicao btn-descer" data-id="${idHtml}" title="Mover para baixo" aria-label="Mover para baixo" ${index === frasesFiltradas.length - 1 ? 'disabled' : ''}>
             ${renderIcone('arrow-down', '', 18)}
           </button>
-          <button type="button" class="btn-acao-edicao btn-editar" data-id="${frase.id}" title="Editar frase" aria-label="Editar frase">
+          <button type="button" class="btn-acao-edicao btn-editar" data-id="${idHtml}" title="Editar frase" aria-label="Editar frase">
             ${renderIcone('pencil', '', 18)}
           </button>
-          <button type="button" class="btn-acao-edicao btn-excluir" data-id="${frase.id}" title="Excluir frase" aria-label="Excluir frase">
+          <button type="button" class="btn-acao-edicao btn-excluir" data-id="${idHtml}" title="Excluir frase" aria-label="Excluir frase">
             ${renderIcone('trash-2', '', 18)}
           </button>
         </div>
@@ -480,10 +494,10 @@ export function renderizarGradeFrases() {
       <div class="cartao-onda-fala" aria-hidden="true"></div>
       <div class="cartao-corpo">
         <div class="cartao-pictograma">${pictogramaHtml}</div>
-        <p class="cartao-texto">${textoExibido}</p>
+        <p class="cartao-texto">${textoHtml}</p>
       </div>
       <div class="cartao-rodape">
-        <button type="button" class="btn-cartao-palco" title="Abrir no Modo Palco" aria-label="Abrir no Modo Palco: ${textoExibido}">
+        <button type="button" class="btn-cartao-palco" title="Abrir no Modo Palco" aria-label="Abrir no Modo Palco: ${textoHtml}">
           ${renderIcone('maximize-2', '', 20)}
           <span class="sr-only">Palco</span>
         </button>
@@ -611,7 +625,7 @@ function renderizarRespostasRapidas() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'btn-resposta-rapida';
-    btn.innerHTML = `${renderIcone(resp.icone, '', 18)} <span>${resp.texto}</span>`;
+    btn.innerHTML = `${renderIcone(resp.icone, '', 18)} <span>${escaparHtml(resp.texto)}</span>`;
 
     btn.addEventListener('click', () => {
       falar(resp.texto, { id: `resp-${resp.texto}` });
@@ -704,7 +718,7 @@ function atualizarListaHistoricoDigitado() {
     const item = document.createElement('div');
     item.className = 'item-historico';
     item.innerHTML = `
-      <button type="button" class="btn-item-historico-texto" title="Falar">${frase}</button>
+      <button type="button" class="btn-item-historico-texto" title="Falar">${escaparHtml(frase)}</button>
       <button type="button" class="btn-item-historico-palco" title="Abrir no Palco" aria-label="Abrir no Modo Palco">
         ${renderIcone('maximize-2', '', 18)}
       </button>
@@ -1035,7 +1049,7 @@ function configurarRespostasRapidas() {
       linha.className = 'item-editar-resposta';
       linha.innerHTML = `
         <label for="resposta-texto-${indice}">Resposta ${indice + 1}</label>
-        <input id="resposta-texto-${indice}" type="text" maxlength="24" value="${item.texto.replace(/"/g, '&quot;')}">
+        <input id="resposta-texto-${indice}" type="text" maxlength="24" value="${escaparHtml(item.texto)}">
         <select id="resposta-icone-${indice}" aria-label="Ícone da resposta ${indice + 1}">
           ${CATALOGO_ICONES.map(cat => `<option value="${cat.id}" ${cat.id === item.icone ? 'selected' : ''}>${cat.rotulo}</option>`).join('')}
         </select>
@@ -1077,16 +1091,14 @@ function configurarRespostasRapidas() {
 function configurarAvisoVoz() {
   if (!bannerAvisoVoz) return;
 
-  // Verifica após carregamento das vozes
-  setTimeout(() => {
-    if (!possuiVozPtBr()) {
-      bannerAvisoVoz.hidden = false;
-      const fecharAviso = bannerAvisoVoz.querySelector('#btn-fechar-aviso-voz');
-      fecharAviso?.addEventListener('click', () => {
-        bannerAvisoVoz.hidden = true;
-      });
-    } else {
-      bannerAvisoVoz.hidden = true;
-    }
-  }, 1200);
+  const atualizarAviso = () => {
+    bannerAvisoVoz.hidden = possuiVozPtBr();
+  };
+  const fecharAviso = bannerAvisoVoz.querySelector('#btn-fechar-aviso-voz');
+  fecharAviso?.addEventListener('click', () => {
+    bannerAvisoVoz.hidden = true;
+  });
+
+  window.addEventListener('ecoa-vozes-atualizadas', atualizarAviso);
+  setTimeout(atualizarAviso, 1200);
 }

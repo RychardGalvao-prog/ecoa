@@ -10,6 +10,8 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORTA = parseInt(process.argv[2], 10) || 8000;
+const HOST = process.argv[3] || '127.0.0.1';
+const RAIZ_PROJETO = fs.realpathSync(__dirname);
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -27,41 +29,78 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-  let urlLimpa = req.url.split('?')[0];
-  if (urlLimpa === '/') urlLimpa = '/index.html';
+  if (req.method !== 'GET') {
+    res.writeHead(405, { 'Content-Type': 'text/plain; charset=utf-8', Allow: 'GET' });
+    res.end('405 Método Não Permitido');
+    return;
+  }
 
-  const caminhoArquivo = path.join(__dirname, urlLimpa);
+  let caminhoArquivo;
+  try {
+    let urlLimpa = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+    if (urlLimpa === '/') urlLimpa = '/index.html';
+    caminhoArquivo = path.resolve(RAIZ_PROJETO, `.${urlLimpa}`);
+  } catch {
+    res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('400 Caminho Inválido');
+    return;
+  }
 
-  // Segurança: previne directory traversal
-  if (!caminhoArquivo.startsWith(__dirname)) {
+  const caminhoRelativo = path.relative(RAIZ_PROJETO, caminhoArquivo);
+  if (
+    caminhoRelativo === '..' ||
+    caminhoRelativo.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(caminhoRelativo)
+  ) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('403 Acesso Negado');
     return;
   }
 
-  fs.stat(caminhoArquivo, (erro, stats) => {
-    if (erro || !stats.isFile()) {
+  fs.realpath(caminhoArquivo, (erroRealPath, caminhoReal) => {
+    if (erroRealPath) {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end('404 Arquivo Não Encontrado');
       return;
     }
 
-    const extensao = path.extname(caminhoArquivo).toLowerCase();
-    const contentType = MIME_TYPES[extensao] || 'application/octet-stream';
+    const caminhoRealRelativo = path.relative(RAIZ_PROJETO, caminhoReal);
+    if (
+      caminhoRealRelativo === '..' ||
+      caminhoRealRelativo.startsWith(`..${path.sep}`) ||
+      path.isAbsolute(caminhoRealRelativo)
+    ) {
+      res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('403 Acesso Negado');
+      return;
+    }
 
-    res.writeHead(200, {
-      'Content-Type': contentType,
-      'Service-Worker-Allowed': '/',
-      'Access-Control-Allow-Origin': '*'
+    fs.stat(caminhoReal, (erroStat, stats) => {
+      if (erroStat || !stats.isFile()) {
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('404 Arquivo Não Encontrado');
+        return;
+      }
+
+      const extensao = path.extname(caminhoReal).toLowerCase();
+      const contentType = MIME_TYPES[extensao] || 'application/octet-stream';
+
+      res.writeHead(200, {
+        'Content-Type': contentType,
+        'Service-Worker-Allowed': '/',
+        'X-Content-Type-Options': 'nosniff'
+      });
+
+      fs.createReadStream(caminhoReal).pipe(res);
     });
-
-    fs.createReadStream(caminhoArquivo).pipe(res);
   });
 });
 
-server.listen(PORTA, '0.0.0.0', () => {
+server.listen(PORTA, HOST, () => {
   console.log(`[Ecoa] Servidor local ativo em:`);
   console.log(` > Local:    http://localhost:${PORTA}`);
-  console.log(` > Na rede:  http://0.0.0.0:${PORTA}`);
+  if (HOST !== '127.0.0.1' && HOST !== 'localhost') {
+    console.log(` > Interface: ${HOST}:${PORTA}`);
+  }
   console.log(`Pressione Ctrl+C para encerrar.`);
 });

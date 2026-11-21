@@ -57,6 +57,15 @@ export const ICONES_SVG = {
  * @returns {string} Elemento SVG formatado
  */
 export function renderIcone(nome, className = '', tamanho = 24) {
-  const conteudo = ICONES_SVG[nome] || ICONES_SVG['help-circle'];
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${tamanho}" height="${tamanho}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icone icone-${nome} ${className}" aria-hidden="true">${conteudo}</svg>`;
+  const nomeSeguro = typeof nome === 'string' && Object.hasOwn(ICONES_SVG, nome)
+    ? nome
+    : 'help-circle';
+  const classeSegura = String(className)
+    .split(/\s+/)
+    .filter(classe => /^[\w-]+$/.test(classe))
+    .join(' ');
+  const tamanhoSeguro = Number.isFinite(tamanho) ? Math.max(1, tamanho) : 24;
+  const conteudo = ICONES_SVG[nomeSeguro];
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${tamanhoSeguro}" height="${tamanhoSeguro}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icone icone-${nomeSeguro} ${classeSegura}" aria-hidden="true">${conteudo}</svg>`;
 }

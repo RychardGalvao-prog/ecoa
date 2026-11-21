@@ -4,8 +4,8 @@ ecoa-simbolo.svg          símbolo colorido (fundo transparente), para fundos cl
 ecoa-simbolo-escuro.svg   símbolo em tons claros, para o tema escuro
 ecoa-simbolo-mono.svg     símbolo em uma cor só (currentColor), para o alto contraste
 ecoa-logo-horizontal.svg  símbolo + "ecoa", para o cabeçalho do app
-ecoa-logo-vertical.svg    símbolo + "ecoa", para boas-vindas e capa do relatório
-ecoa-logo-completo.svg    com o slogan "Prancha digital de comunicação com voz"
+ecoa-logo-vertical.svg    símbolo + "ecoa", versão vertical
+ecoa-logo-completo.svg    com o slogan "Prancha digital de comunicação com voz", usado nas boas-vindas
 
 icon-192.png, icon-512.png            ícones do PWA (purpose: any)
 icon-maskable-192.png, icon-maskable-512.png       ícones do PWA (purpose: maskable, com margem de segurança)
