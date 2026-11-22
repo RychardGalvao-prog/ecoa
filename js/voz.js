@@ -225,7 +225,7 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
   if (!suportaSinteseVoz()) {
     console.warn(`[${APP_NAME}] Web Speech API não suportada neste navegador.`);
     window.dispatchEvent(new CustomEvent('ecoa-voz-erro', {
-      detail: { error: 'speech-unavailable', id }
+      detail: { error: 'speech-unavailable' }
     }));
     return false;
   }
@@ -251,9 +251,7 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
       estaFalando = true;
       idItemFalando = id;
       notificarEstado(textoLimpo);
-      window.dispatchEvent(new CustomEvent('ecoa-voz-iniciada', {
-        detail: { id }
-      }));
+      window.dispatchEvent(new CustomEvent('ecoa-voz-iniciada'));
       if (typeof aoIniciar === 'function') aoIniciar();
     };
 
@@ -261,9 +259,6 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
       estaFalando = false;
       idItemFalando = null;
       notificarEstado();
-      window.dispatchEvent(new CustomEvent('ecoa-voz-finalizada', {
-        detail: { id }
-      }));
       if (typeof aoTerminar === 'function') aoTerminar();
     };
 
@@ -274,7 +269,7 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
       notificarEstado();
       if (evento.error !== 'canceled' && evento.error !== 'interrupted') {
         window.dispatchEvent(new CustomEvent('ecoa-voz-erro', {
-          detail: { error: evento.error || 'unknown', id }
+          detail: { error: evento.error || 'unknown' }
         }));
       }
       if (typeof aoTerminar === 'function') aoTerminar();
@@ -292,7 +287,7 @@ export function falar(texto, { id = null, aoIniciar = null, aoTerminar = null } 
     idItemFalando = null;
     notificarEstado();
     window.dispatchEvent(new CustomEvent('ecoa-voz-erro', {
-      detail: { error: erro.name || 'unknown', id }
+      detail: { error: erro.name || 'unknown' }
     }));
     return false;
   }

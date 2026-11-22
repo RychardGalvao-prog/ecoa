@@ -1116,17 +1116,8 @@ function configurarAvisoVoz() {
   });
 
   window.addEventListener('ecoa-vozes-atualizadas', atualizarAviso);
-  window.addEventListener('ecoa-voz-iniciada', evento => {
-    if (evento.detail?.id === 'teste-voz') {
-      exibirMensagem('O navegador iniciou a síntese. Esse evento não confirma que o som saiu pelo alto-falante.');
-      return;
-    }
+  window.addEventListener('ecoa-voz-iniciada', () => {
     bannerAvisoVoz.hidden = true;
-  });
-  window.addEventListener('ecoa-voz-finalizada', evento => {
-    if (evento.detail?.id === 'teste-voz') {
-      exibirMensagem('O navegador informou que terminou o teste. Se você não ouviu, feche o Safari por completo, abra uma nova aba e tente novamente.');
-    }
   });
   window.addEventListener('ecoa-voz-erro', evento => {
     const mensagens = {

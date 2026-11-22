@@ -2,10 +2,10 @@
  * ecoa - Prancha Digital de Comunicação Alternativa e Aumentativa (CAA)
  * Projeto Acadêmico - Universidade Federal do Maranhão (UFMA)
  * Service Worker: sw.js - Cache de recursos locais para uso offline
- * Cache v9 - Diagnóstico da saída de voz em navegadores móveis
+ * Cache v8 - Diagnóstico e atualização de vozes em navegadores móveis
  */
 
-const CACHE_NAME = 'ecoa-app-cache-v9';
+const CACHE_NAME = 'ecoa-app-cache-v8';
 
 // Lista de todos os recursos locais essenciais para o funcionamento offline
 const RECURSOS_PARA_CACHE = [
