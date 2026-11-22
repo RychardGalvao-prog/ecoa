@@ -1,3 +1,16 @@
 .playwright-mcp/
 Thumbs.db
 .DS_Store
+
+# Dependências, builds e resultados locais
+node_modules/
+dist/
+build/
+coverage/
+.next/
+out/
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
