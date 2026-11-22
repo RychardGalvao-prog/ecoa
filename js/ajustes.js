@@ -24,6 +24,62 @@ import {
 let containerAjustes = null;
 let callbackRecarregarInterface = null;
 let ouvintesPreferenciasSistemaConfigurados = false;
+let timeoutTesteVoz = null;
+
+function atualizarStatusTesteVoz(mensagem) {
+  document.querySelectorAll('[data-voz-teste-status]').forEach(elemento => {
+    elemento.textContent = mensagem;
+  });
+}
+
+function iniciarTesteVoz() {
+  window.clearTimeout(timeoutTesteVoz);
+  atualizarStatusTesteVoz('Enviando o teste de fala ao navegador...');
+  timeoutTesteVoz = window.setTimeout(() => {
+    atualizarStatusTesteVoz('O navegador não confirmou o início do teste. Feche-o por completo, abra uma nova aba e tente novamente.');
+    timeoutTesteVoz = null;
+  }, 8000);
+  testarVozAtual();
+  vibrarSeAtivo();
+}
+
+function testarSaidaAudio() {
+  const AudioContexto = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContexto) {
+    atualizarStatusTesteVoz('Este navegador não disponibiliza o teste de saída de áudio.');
+    return;
+  }
+
+  let contexto;
+  try {
+    contexto = new AudioContexto();
+    contexto.resume().then(() => {
+      const agora = contexto.currentTime;
+      const oscilador = contexto.createOscillator();
+      const ganho = contexto.createGain();
+
+      oscilador.frequency.setValueAtTime(660, agora);
+      ganho.gain.setValueAtTime(0, agora);
+      ganho.gain.linearRampToValueAtTime(0.06, agora + 0.02);
+      ganho.gain.setValueAtTime(0.06, agora + 0.18);
+      ganho.gain.linearRampToValueAtTime(0, agora + 0.24);
+      oscilador.connect(ganho);
+      ganho.connect(contexto.destination);
+      oscilador.onended = () => {
+        contexto.close().catch(() => {});
+      };
+      oscilador.start(agora);
+      oscilador.stop(agora + 0.25);
+      atualizarStatusTesteVoz('Tom curto enviado ao Safari. Você ouviu?');
+    }).catch(() => {
+      atualizarStatusTesteVoz('O navegador não conseguiu iniciar o teste de áudio.');
+      contexto.close().catch(() => {});
+    });
+  } catch {
+    atualizarStatusTesteVoz('O navegador não conseguiu iniciar o teste de áudio.');
+    contexto?.close().catch(() => {});
+  }
+}
 
 /**
  * Inicializa a tela de ajustes e vincula todos os controles
@@ -378,13 +434,32 @@ function vincularEventosControles() {
 
   // Botão Testar Voz
   const btnTestarVoz = containerAjustes.querySelector('#btn-testar-voz');
-  btnTestarVoz?.addEventListener('click', () => {
-    testarVozAtual();
-    vibrarSeAtivo();
-  });
+  btnTestarVoz?.addEventListener('click', iniciarTesteVoz);
+  containerAjustes.querySelector('#btn-testar-saida-audio')?.addEventListener('click', testarSaidaAudio);
   document.getElementById('btn-boas-vindas-testar-voz')?.addEventListener('click', () => {
-    testarVozAtual();
-    vibrarSeAtivo();
+    iniciarTesteVoz();
+  });
+
+  window.addEventListener('ecoa-voz-iniciada', evento => {
+    if (evento.detail?.id === 'teste-voz') {
+      window.clearTimeout(timeoutTesteVoz);
+      timeoutTesteVoz = null;
+      atualizarStatusTesteVoz('O navegador iniciou a síntese. Esse evento não confirma que o som saiu pelo alto-falante.');
+    }
+  });
+  window.addEventListener('ecoa-voz-finalizada', evento => {
+    if (evento.detail?.id === 'teste-voz') {
+      window.clearTimeout(timeoutTesteVoz);
+      timeoutTesteVoz = null;
+      atualizarStatusTesteVoz('O navegador informou que terminou o teste. Se você não ouviu, feche o Safari por completo, abra uma nova aba e tente novamente.');
+    }
+  });
+  window.addEventListener('ecoa-voz-erro', evento => {
+    if (evento.detail?.id === 'teste-voz') {
+      window.clearTimeout(timeoutTesteVoz);
+      timeoutTesteVoz = null;
+      atualizarStatusTesteVoz(`O navegador informou uma falha na síntese (${evento.detail.error || 'erro desconhecido'}).`);
+    }
   });
 
   // Toggles de acessibilidade
